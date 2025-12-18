@@ -33,7 +33,8 @@
 - **Perché**: più robustezza a shift di distribuzione.
 - **Come**: modifica `config.py` e `model.py` (dropout) e `client.py` (weight_decay).
 
-## 5) Ensemble semplice
+## 5) Ensemble semplice (evitabile non possiamo usare GBDT mi sa )
+
 
 - Media tra il MLP federato e un modello GBDT (XGBoost/LightGBM) addestrato centralmente sulle stesse feature.
 - **Perché**: su tabellare gli alberi catturano interazioni non lineari, spesso abbassano il MAE.
