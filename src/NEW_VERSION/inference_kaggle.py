@@ -49,6 +49,12 @@ df.columns = df.columns.str.strip()
 ids = df['day'].values if 'day' in df.columns else np.arange(len(df))
 df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
 df = df.reindex(columns=TOP_FEATURES, fill_value=np.nan)
+
+# Forziamo a float per evitare warning dtype
+df[TOP_FEATURES] = df[TOP_FEATURES].astype(float)
+# I mancanti nel test sono codificati come -1/-2: convertiamo a NaN e riempiamo con le medie del train
+neg_mask = df[TOP_FEATURES] < 0
+df.loc[:, TOP_FEATURES] = df[TOP_FEATURES].where(~neg_mask, np.nan)
 df = df.fillna(feature_means)
 X = torch.tensor(scaler.transform(df.values), dtype=torch.float32)
 

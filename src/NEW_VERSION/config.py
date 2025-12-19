@@ -8,15 +8,16 @@ DATASET_PATH = os.path.join(BASE_DIR, "..", "..", "dataset", "CSV_train")
 SEED = 42
 
 # Training
-ROUNDS = 90          # federated rounds
-LOCAL_EPOCHS = 10    # epochs per client
+ROUNDS = 150         # federated rounds (più iterazioni per convergere)
+LOCAL_EPOCHS = 15    # epochs per client
 BATCH_SIZE = 16
-LR = 7e-4
+LR = 5e-4            # LR più basso per convergenza stabile
 
 # Model
-HIDDEN_1 = 128
-HIDDEN_2 = 64
-DROPOUT = 0.20
+HIDDEN_1 = 256
+HIDDEN_2 = 128
+HIDDEN_3 = 64
+DROPOUT = 0.15       # dropout ridotto (meno underfit)
 
 # Data
 TOP_K_FEATURES = 25

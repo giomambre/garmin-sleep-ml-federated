@@ -13,9 +13,9 @@ def train_local(model, data, epochs, lr):
     )
     loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-    # Adam con un leggero weight decay per stabilizzare
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)
-    loss_fn = nn.L1Loss()   # MAE
+    # Adam con weight decay per regolarizzare
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-5)
+    loss_fn = nn.SmoothL1Loss()   # Huber loss: meno sensibile a outlier rispetto a L1
 
     model.train()
     for _ in range(epochs):

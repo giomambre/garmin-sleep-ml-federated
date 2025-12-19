@@ -37,22 +37,23 @@ TOP_FEATURES = [
 
 clients, scaler = prepare_data(clients_raw, TOP_FEATURES)
 
-# Costruiamo un validation set per utente: tutti i record dello stesso utente
-# restano insieme nello stesso split. Così il modello viene testato su utenti
-# mai visti in training, scenario più vicino al test Kaggle.
-all_X, all_y, groups = [], [], []
-for user, (Xc, yc) in clients.items():
-    all_X.append(Xc)
-    all_y.append(yc)
-    groups.extend([user] * len(Xc))
-
-all_X = np.concatenate(all_X, axis=0)
-all_y = np.concatenate(all_y, axis=0)
-groups = np.array(groups)
-
+# Split a livello utente: gli utenti di validazione vengono esclusi dal training
+users = list(clients.keys())
 gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=SEED)
-train_idx, val_idx = next(gss.split(all_X, all_y, groups))
-X_val, y_val = all_X[val_idx], all_y[val_idx]
+user_idx = np.arange(len(users))
+train_idx, val_idx = next(gss.split(user_idx, user_idx, groups=user_idx))
+train_users = {users[i] for i in train_idx}
+val_users = {users[i] for i in val_idx}
+
+# Costruiamo il validation set solo con utenti mai visti nel training
+X_val, y_val = [], []
+for u in val_users:
+    Xc, yc = clients[u]
+    X_val.append(Xc)
+    y_val.append(yc)
+
+X_val = np.concatenate(X_val, axis=0)
+y_val = np.concatenate(y_val, axis=0)
 
 model = SleepNet(len(TOP_FEATURES))
 
@@ -62,6 +63,8 @@ for r in range(ROUNDS):
     client_sizes = []
 
     for user, data in clients.items():
+        if user not in train_users:
+            continue
         # Ogni client riceve il modello globale corrente come punto di partenza
         local_model = SleepNet(len(TOP_FEATURES))
         local_model.load_state_dict(model.state_dict())

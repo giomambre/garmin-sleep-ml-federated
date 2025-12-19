@@ -11,6 +11,17 @@ DROP_COLS = [
 ]
 
 
+def _clean_missing(df, features):
+    """Replace negative placeholders (-1, -2) with NaN before imputing."""
+    # Forziamo a float per poter inserire NaN senza warning di dtype incompatibile
+    df = df.copy()
+    df[features] = df[features].astype(float)
+    # Nel dataset i mancanti sono spesso -1/-2: li convertiamo a NaN così le medie li rimpiazzano.
+    mask = df[features] < 0
+    df.loc[:, features] = df[features].where(~mask, np.nan)
+    return df
+
+
 def load_clients(base_path):
     clients = {}
     files = glob.glob(os.path.join(base_path, "**/*.csv"), recursive=True)
@@ -42,6 +53,7 @@ def prepare_data(clients, top_features):
     scaler = StandardScaler()
 
     full = pd.concat(clients.values())
+    full = _clean_missing(full, top_features)
     # Allineiamo le colonne alle feature attese (mancanti riempite con NaN),
     # calcoliamo le medie SOLO sul train e le useremo anche in inferenza.
     full = full.reindex(columns=top_features + [c for c in full.columns if c not in top_features], fill_value=np.nan)
@@ -53,6 +65,7 @@ def prepare_data(clients, top_features):
     for u, df in clients.items():
         # Applichiamo le stesse colonne e le stesse medie calcolate sul train
         df = df.reindex(columns=top_features + [c for c in df.columns if c not in top_features], fill_value=np.nan)
+        df = _clean_missing(df, top_features)
         df[top_features] = df[top_features].fillna(feature_means)
         X = scaler.transform(df[top_features].values)
         y = (df['label'].values / 100.0).reshape(-1, 1)
