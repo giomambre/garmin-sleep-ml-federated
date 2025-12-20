@@ -51,8 +51,8 @@ def load_clients(base_path):
 
 class FederatedScaler:
     """
-    A scaler that fits using aggregated statistics from clients,
-    ensuring no raw data is shared.
+    Uno scaler che si adatta usando statistiche aggregate dai client,
+    garantendo che nessun dato grezzo venga condiviso.
     """
     def __init__(self):
         self.mean_ = None
@@ -64,46 +64,46 @@ class FederatedScaler:
         self.top_features = top_features
         n_features = len(top_features)
         
-        # Aggregators for global stats
+        # Aggregatori per le statistiche globali
         global_sum = np.zeros(n_features)
         global_sq_sum = np.zeros(n_features)
         global_count_obs = np.zeros(n_features)
         global_count_total = 0
 
-        # --- PHASE 1: Clients calculate local stats (Simulation) ---
+        # --- FASE 1: I client calcolano le statistiche locali (Simulazione) ---
         for u, df in clients_data.items():
-            # 1. Clean locally
+            # 1. Pulizia locale
             df = _clean_missing(df, top_features)
-            # 2. Ensure columns exist
+            # 2. Assicuriamoci che le colonne esistano
             df = df.reindex(columns=top_features, fill_value=np.nan)
             vals = df[top_features].values
             
-            # 3. Calculate local stats
-            # Mask of observed values (not NaN)
+            # 3. Calcolo statistiche locali
+            # Maschera dei valori osservati (non NaN)
             obs_mask = ~np.isnan(vals)
             
-            # Sum of observed values
+            # Somma dei valori osservati
             local_sum = np.nansum(vals, axis=0)
             
-            # Sum of squares of observed values
+            # Somma dei quadrati dei valori osservati
             local_sq_sum = np.nansum(vals**2, axis=0)
             
-            # Count of observed values
+            # Conteggio dei valori osservati
             local_count_obs = obs_mask.sum(axis=0)
             
-            # Total rows (including missing)
+            # Totale righe (inclusi mancanti)
             local_count_total = len(df)
 
-            # --- Client sends stats to Server ---
+            # --- Il client invia le statistiche al Server ---
             global_sum += local_sum
             global_sq_sum += local_sq_sum
             global_count_obs += local_count_obs
             global_count_total += local_count_total
 
-        # --- PHASE 2: Server aggregates and computes global parameters ---
+        # --- FASE 2: Il server aggrega e calcola i parametri globali ---
         
-        # 1. Global Mean (used for imputation)
-        # Avoid division by zero
+        # 1. Media Globale (usata per imputazione)
+        # Evitiamo divisione per zero
         self.mean_ = np.divide(
             global_sum, 
             global_count_obs, 
@@ -111,10 +111,10 @@ class FederatedScaler:
             where=global_count_obs!=0
         )
         
-        # 2. Global Std (used for scaling)
-        # We need the variance of the dataset *after* imputation with the mean.
-        # Formula: Variance = (Sum_sq_observed - 2*Mean*Sum_observed + Count_observed*Mean^2) / Total_Count
-        # Note: The contribution of imputed values to the sum of squared errors (x - mean)^2 is 0.
+        # 2. Deviazione Standard Globale (usata per scaling)
+        # Ci serve la varianza del dataset *dopo* l'imputazione con la media.
+        # Formula: Varianza = (Somma_quadrati_osservati - 2*Media*Somma_osservati + Conteggio_osservati*Media^2) / Totale_Conteggi
+        # Nota: Il contributo dei valori imputati alla somma degli errori quadratici (x - media)^2 è 0.
         
         numerator = (
             global_sq_sum 
@@ -122,13 +122,13 @@ class FederatedScaler:
             + (self.mean_**2) * global_count_obs
         )
         
-        # Variance
+        # Varianza
         self.var_ = numerator / global_count_total
         
-        # Std Dev
+        # Deviazione Standard
         self.scale_ = np.sqrt(self.var_)
         
-        # Handle constant features (scale=0) -> set to 1 to avoid div by zero
+        # Gestione feature costanti (scale=0) -> impostiamo a 1 per evitare div per zero
         self.scale_[self.scale_ == 0] = 1.0
         
         self.n_samples_seen_ = global_count_total
@@ -136,22 +136,22 @@ class FederatedScaler:
 
     def transform(self, df):
         """
-        Applies imputation (using global mean) and scaling (using global std).
+        Applica imputazione (usando media globale) e scaling (usando std globale).
         """
         if self.mean_ is None or self.scale_ is None:
-            raise ValueError("Scaler not fitted yet.")
+            raise ValueError("Scaler non ancora fittato.")
             
         df = df.copy()
-        # Ensure columns match
+        # Assicuriamoci che le colonne corrispondano
         df = df.reindex(columns=self.top_features + [c for c in df.columns if c not in self.top_features], fill_value=np.nan)
         
-        # Clean missing values
+        # Pulizia valori mancanti
         df = _clean_missing(df, self.top_features)
         
-        # Impute with GLOBAL mean
+        # Imputazione con media GLOBALE
         df[self.top_features] = df[self.top_features].fillna(pd.Series(self.mean_, index=self.top_features))
         
-        # Scale with GLOBAL stats
+        # Scaling con statistiche GLOBALI
         X = df[self.top_features].values
         X_scaled = (X - self.mean_) / self.scale_
         
@@ -160,8 +160,8 @@ class FederatedScaler:
 
 def transform_clients(clients, fed_scaler):
     """
-    Transforms clients using the FederatedScaler.
-    Returns a dictionary of (X, y) tuples.
+    Trasforma i client usando il FederatedScaler.
+    Restituisce un dizionario di tuple (X, y).
     """
     processed_clients = {}
     for u, df in clients.items():
@@ -179,6 +179,6 @@ def transform_clients(clients, fed_scaler):
 
 def prepare_data(clients, top_features):
     """
-    DEPRECATED: Use FederatedScaler manually in training script.
+    DEPRECATO: Usa FederatedScaler manualmente nello script di training.
     """
-    raise NotImplementedError("Use FederatedScaler in train_federated.py instead.")
+    raise NotImplementedError("Usa FederatedScaler in train_federated.py invece.")

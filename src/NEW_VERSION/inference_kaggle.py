@@ -4,14 +4,13 @@ import torch
 import pandas as pd
 import numpy as np
 from model import SleepNet
-from data_utils import DROP_COLS
+from data_utils import DROP_COLS, FederatedScaler
 from config import TARGET_SCALE, DATASET_PATH
 import joblib
 
-# Carichiamo scaler e medie calcolate sul train per replicare identico preprocessing
-bundle = joblib.load("scaler.joblib")
-scaler = bundle["scaler"]
-feature_means = bundle["feature_means"]
+# Carichiamo lo scaler federato (contiene medie e std globali)
+fed_scaler = joblib.load("federated_scaler.joblib")
+
 TOP_FEATURES = [
     'act_activeKilocalories',
     'act_totalCalories',
@@ -32,15 +31,15 @@ TOP_FEATURES = [
     'sleep_napTimeSeconds',
     'sleep_lowestRespirationValue',
     'sleep_avgHeartRate',
-  'resp_highestRespirationValue',
-  'resp_avgSleepRespirationValue',
-  'resp_avgWakingRespirationValue',
-  'resp_lowestRespirationValue'
+    'resp_highestRespirationValue',
+    'resp_avgSleepRespirationValue',
+    'resp_avgWakingRespirationValue',
+    'resp_lowestRespirationValue'
 ]
-  # stessi del training
 
 model = SleepNet(len(TOP_FEATURES))
-model.load_state_dict(torch.load("federated_model.pt"))
+# Carichiamo il modello migliore salvato durante il training
+model.load_state_dict(torch.load("best_federated_model.pt"))
 model.eval()
 
 test_path = os.path.join(DATASET_PATH, "x_test.csv")
@@ -48,15 +47,10 @@ df = pd.read_csv(test_path, sep=';')
 df.columns = df.columns.str.strip()
 ids = df['day'].values if 'day' in df.columns else np.arange(len(df))
 df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
-df = df.reindex(columns=TOP_FEATURES, fill_value=np.nan)
 
-# Forziamo a float per evitare warning dtype
-df[TOP_FEATURES] = df[TOP_FEATURES].astype(float)
-# I mancanti nel test sono codificati come -1/-2: convertiamo a NaN e riempiamo con le medie del train
-neg_mask = df[TOP_FEATURES] < 0
-df.loc[:, TOP_FEATURES] = df[TOP_FEATURES].where(~neg_mask, np.nan)
-df = df.fillna(feature_means)
-X_np = scaler.transform(df.values)
+# Usiamo il metodo transform dello scaler federato
+# Questo gestisce internamente: reindex, pulizia -1/-2, imputazione con media globale, scaling con std globale
+X_np = fed_scaler.transform(df)
 X = torch.tensor(X_np, dtype=torch.float32)
 
 with torch.no_grad():

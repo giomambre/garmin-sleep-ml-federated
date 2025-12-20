@@ -13,7 +13,7 @@ DATASET_PATH = os.path.join(BASE_DIR, "..", "..", "dataset", "CSV_train")
 SEED = 42
 
 # Training
-ROUNDS = 150         # federated rounds (più iterazioni per convergere)
+ROUNDS = 50         # federated rounds (più iterazioni per convergere)
 LOCAL_EPOCHS = 15    # epochs per client
 BATCH_SIZE = 16
 LR = 5e-4            # LR più basso per convergenza stabile
