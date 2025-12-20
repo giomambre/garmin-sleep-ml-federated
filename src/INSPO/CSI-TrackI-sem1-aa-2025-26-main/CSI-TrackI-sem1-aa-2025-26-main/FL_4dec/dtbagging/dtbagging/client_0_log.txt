@@ -1,0 +1,39 @@
+2025-12-03 00:25:34,959 - Columns in dataset: Index(['date', 'avg_temp', 'avg_humidity', 'avg_co2', 'avg_tvoc', 'predicted',
+       'label'],
+      dtype='object')
+2025-12-03 00:25:34,964 - First few rows:
+       date  avg_temp  avg_humidity  avg_co2  avg_tvoc  predicted  label
+0  02/04/25     24.63         39.77   473.00      2.00        0.0    0.0
+1  03/04/25     24.59         38.06   584.14      0.00        0.0    0.0
+2  04/04/25     24.91         51.68   507.20      0.00        0.0    0.0
+3  05/04/25     24.55         45.27  1121.29     10.68        0.0    0.0
+4  06/04/25     22.37         55.70   429.67      0.00        1.0    1.0
+2025-12-03 00:25:52,912 - Columns in dataset: Index(['date', 'avg_temp', 'avg_humidity', 'avg_co2', 'avg_tvoc', 'predicted',
+       'label'],
+      dtype='object')
+2025-12-03 00:25:52,915 - First few rows:
+       date  avg_temp  avg_humidity  avg_co2  avg_tvoc  predicted  label
+0  02/04/25     24.63         39.77   473.00      2.00        0.0    0.0
+1  03/04/25     24.59         38.06   584.14      0.00        0.0    0.0
+2  04/04/25     24.91         51.68   507.20      0.00        0.0    0.0
+3  05/04/25     24.55         45.27  1121.29     10.68        0.0    0.0
+4  06/04/25     22.37         55.70   429.67      0.00        1.0    1.0
+2025-12-03 00:25:52,934 - get_parameters chiamato
+2025-12-03 00:25:52,941 - fit chiamato
+2025-12-03 00:25:52,941 - Modello globale caricato dal server.
+2025-12-03 00:25:53,044 - Model trained. Accuracy: 1.0000
+2025-12-03 00:25:53,065 - evaluate chiamato
+2025-12-03 00:25:53,066 - Modello globale caricato per la valutazione.
+2025-12-03 00:25:53,068 - Model evaluation: Accuracy = 1.0000
+2025-12-03 00:25:53,074 - fit chiamato
+2025-12-03 00:25:53,075 - Modello globale caricato dal server.
+2025-12-03 00:25:53,212 - Model trained. Accuracy: 1.0000
+2025-12-03 00:25:53,243 - evaluate chiamato
+2025-12-03 00:25:53,244 - Modello globale caricato per la valutazione.
+2025-12-03 00:25:53,246 - Model evaluation: Accuracy = 1.0000
+2025-12-03 00:25:53,249 - fit chiamato
+2025-12-03 00:25:53,250 - Modello globale caricato dal server.
+2025-12-03 00:25:53,388 - Model trained. Accuracy: 1.0000
+2025-12-03 00:25:53,419 - evaluate chiamato
+2025-12-03 00:25:53,420 - Modello globale caricato per la valutazione.
+2025-12-03 00:25:53,421 - Model evaluation: Accuracy = 1.0000

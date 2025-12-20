@@ -1,0 +1,35 @@
+2025-12-03 00:25:34,959 - Columns in dataset: Index(['date', 'avg_temp', 'avg_humidity', 'avg_co2', 'avg_tvoc', 'predicted',
+       'label'],
+      dtype='object')
+2025-12-03 00:25:34,964 - First few rows:
+       date  avg_temp  avg_humidity  avg_co2  avg_tvoc  predicted  label
+0  28/03/25     22.62         47.54   416.69     21.55          0      0
+1  29/03/25     22.40         51.68   504.70     90.14          0      0
+2  30/03/25     22.76         44.03   965.34    200.46          0      0
+3  31/03/25     21.24         33.66   426.71     11.50          1      1
+4  01/04/25     21.88         39.31  1488.15    444.32          0      0
+2025-12-03 00:25:52,918 - Columns in dataset: Index(['date', 'avg_temp', 'avg_humidity', 'avg_co2', 'avg_tvoc', 'predicted',
+       'label'],
+      dtype='object')
+2025-12-03 00:25:52,921 - First few rows:
+       date  avg_temp  avg_humidity  avg_co2  avg_tvoc  predicted  label
+0  28/03/25     22.62         47.54   416.69     21.55          0      0
+1  29/03/25     22.40         51.68   504.70     90.14          0      0
+2  30/03/25     22.76         44.03   965.34    200.46          0      0
+3  31/03/25     21.24         33.66   426.71     11.50          1      1
+4  01/04/25     21.88         39.31  1488.15    444.32          0      0
+2025-12-03 00:25:53,065 - evaluate chiamato
+2025-12-03 00:25:53,067 - Modello globale caricato per la valutazione.
+2025-12-03 00:25:53,072 - Model evaluation: Accuracy = 0.9500
+2025-12-03 00:25:53,074 - fit chiamato
+2025-12-03 00:25:53,075 - Modello globale caricato dal server.
+2025-12-03 00:25:53,220 - Model trained. Accuracy: 1.0000
+2025-12-03 00:25:53,243 - evaluate chiamato
+2025-12-03 00:25:53,245 - Modello globale caricato per la valutazione.
+2025-12-03 00:25:53,246 - Model evaluation: Accuracy = 0.9500
+2025-12-03 00:25:53,249 - fit chiamato
+2025-12-03 00:25:53,250 - Modello globale caricato dal server.
+2025-12-03 00:25:53,394 - Model trained. Accuracy: 1.0000
+2025-12-03 00:25:53,419 - evaluate chiamato
+2025-12-03 00:25:53,420 - Modello globale caricato per la valutazione.
+2025-12-03 00:25:53,421 - Model evaluation: Accuracy = 0.9500

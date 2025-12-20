@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dt_bagging_cyclic"
+version = "1.0.0"
+description = "DT bagging and cyclic Federated Learning with Flower"
+license = "Apache-2.0"
+dependencies = [
+    "flwr[simulation]>=1.13.0",
+    "pandas",
+    "xgboost<=2.0.0",
+    "scikit-learn>=1.3.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.flwr.app]
+publisher = "susi"
+
+[tool.flwr.app.components]
+serverapp = "server_app:app"
+clientapp = "client_app:app"
+
+[tool.flwr.app.config]
+train-method = "bagging" # Choose from [bagging, cyclic]
+num-server-rounds = 10
+fraction-train = 1.0
+fraction-evaluate = 1.0
+local-epochs = 1
+server-address="localhost:8080"
+test-fraction = 0.2
+seed = 42
+params.objective = "reg:squarederror"
+params.eta = 0.1 # Learning rate
+params.max-depth = 8
+params.nthread = 16
+params.num-parallel-tree = 1
+params.subsample = 1
+params.tree-method = "hist"
+
+[tool.flwr.federations]
+default = "local-simulation"
+
+[tool.flwr.federations.local-simulation]
+options.num-supernodes = 4

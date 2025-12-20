@@ -56,7 +56,8 @@ df[TOP_FEATURES] = df[TOP_FEATURES].astype(float)
 neg_mask = df[TOP_FEATURES] < 0
 df.loc[:, TOP_FEATURES] = df[TOP_FEATURES].where(~neg_mask, np.nan)
 df = df.fillna(feature_means)
-X = torch.tensor(scaler.transform(df.values), dtype=torch.float32)
+X_np = scaler.transform(df.values)
+X = torch.tensor(X_np, dtype=torch.float32)
 
 with torch.no_grad():
     preds = model(X).numpy().flatten() * TARGET_SCALE

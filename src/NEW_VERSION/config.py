@@ -5,6 +5,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_PATH = os.path.join(BASE_DIR, "..", "..", "dataset", "CSV_train")
 
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_PATH = os.path.join(BASE_DIR, "..", "..", "dataset", "CSV_train")
+
 SEED = 42
 
 # Training
@@ -22,5 +27,7 @@ DROPOUT = 0.15       # dropout ridotto (meno underfit)
 # Data
 TOP_K_FEATURES = 25
 TARGET_SCALE = 100.0
+
+
 
 

@@ -5,12 +5,12 @@ Questa cartella contiene una versione semplice del training federato basato su u
 ## Cosa fa ogni file (NEW_VERSION)
 
 - `config.py`: tutti gli iperparametri in un posto (round federati, learning rate, batch size, feature usate, path del dataset).
-- `data_utils.py`: carica i CSV di tutti gli utenti, pulisce le colonne inutili, converte i placeholder mancanti (-1/-2) in NaN, riempie con la media del train, applica lo scaler e salva sia scaler sia medie in `scaler.joblib`.
+- `data_utils.py`: contiene `FederatedScaler`, una classe che calcola medie e deviazioni standard globali aggregando statistiche parziali dai client (somme, somme dei quadrati, conteggi) senza mai condividere i dati grezzi.
 - `model.py`: definisce l'MLP (tre layer densi 256->128->64 con LayerNorm e dropout) che produce una singola predizione del punteggio.
 - `client.py`: esegue il training locale di un client su un batch loader con SmoothL1Loss (Huber) e restituisce i pesi aggiornati e il numero di campioni visti (serve per la media pesata).
 - `server.py`: fa la Federated Averaging pesata in base ai campioni per ogni client.
-- `train_federated.py`: orchestratore. Carica i dati di tutti gli utenti, prepara feature e scaler, esegue i round federati e calcola un MAE di validazione "onesta" con uno split per utente (GroupShuffleSplit). Salva il modello in `federated_model.pt` e il bundle scaler/medie in `scaler.joblib`.
-- `inference_kaggle.py`: carica modello e scaler, riempie i NaN con le medie del train, applica lo scaling e genera `submission.csv` per Kaggle.
+- `train_federated.py`: orchestratore. Carica i dati, divide gli utenti in train/val. Usa `FederatedScaler` per calcolare le statistiche globali in modo privacy-preserving. Esegue i round federati e valida ogni 5 round salvando il modello migliore (`best_federated_model.pt`).
+- `inference_kaggle.py`: carica modello e `federated_scaler.joblib`; applica lo stesso preprocessing (imputazione e scaling con parametri globali) e genera `submission.csv`.
 
 ## Come usare (passi brevi)
 
@@ -29,7 +29,7 @@ pip install -r requirements.txt
 python src/NEW_VERSION/train_federated.py
 ```
 
-L'output stampa "Hold-out MAE: ..." con split per utente, piu' realistico di uno split casuale.
+L'output mostrerà il calcolo delle statistiche federate, poi il MAE ogni 5 round.
 
 3. Genera il file di submission per Kaggle:
 
@@ -41,21 +41,25 @@ Troverai `submission.csv` nella root del progetto.
 
 ## Come funziona il flusso
 
-1. **Caricamento dati**: ogni file `dataset_user_*_train.csv` e' associato al suo utente; niente aggregazione per cartella di gruppo.
-2. **Pulizia**: colonne irrilevanti vengono droppate (`DROP_COLS`), le feature vengono reindicizzate per avere tutte le colonne attese. I placeholder -1/-2 (mancanti) vengono convertiti in NaN e riempiti con la media calcolata sul train.
-3. **Scaling**: lo `StandardScaler` viene fittato su tutte le feature del train; scaler e medie vengono salvati in `scaler.joblib` e riusati in inferenza.
-4. **Training locale**: ogni client allena l'MLP sui propri dati per `LOCAL_EPOCHS` con Adam e un leggero weight decay per stabilizzare.
-5. **Aggregazione**: il server fa una media pesata dei pesi del modello usando il numero di campioni per client.
-6. **Validazione**: lo split e' per utente (GroupShuffleSplit) per evitare leakage e avere una stima del MAE piu' vicina allo scenario Kaggle.
-7. **Inferenza**: carica `federated_model.pt` e `scaler.joblib`, riempie i NaN con le medie del train, scala le feature e produce `submission.csv` con colonne `id` (day) e `label` (0-100, arrotondato).
+1. **Caricamento dati**: ogni file `dataset_user_*_train.csv` e' associato al suo utente.
+2. **Split Train/Val**: gli utenti vengono divisi in due gruppi (80/20) **prima** di toccare i dati.
+3. **Statistiche Federate (Privacy-Preserving)**:
+   - Invece di unire i dati, ogni client calcola localmente: somma delle feature, somma dei quadrati e conteggio.
+   - Il server aggrega questi numeri per ottenere Media e Deviazione Standard globali.
+   - **Nessun dato grezzo lascia mai il client.**
+   - Salviamo queste statistiche in `federated_scaler.joblib`.
+4. **Preprocessing Locale**: Ogni client usa le statistiche globali ricevute per imputare i mancanti e scalare i propri dati.
+5. **Training locale**: ogni client allena l'MLP sui propri dati per `LOCAL_EPOCHS`.
+6. **Aggregazione**: il server fa una media pesata dei pesi del modello.
+7. **Validazione periodica**: ogni 5 round calcoliamo il MAE sul validation set.
+8. **Inferenza**: carica il modello migliore e lo scaler federato, applica lo stesso preprocessing e produce `submission.csv`.
 
 ## Spiegato passo-passo (anche se non hai mai usato Torch/Sklearn/FL)
 
-- **Preparazione dati**
+- **Preparazione dati (Federated Statistics)**
 
-  - Leggiamo i CSV con Pandas (`pd.read_csv`), togliamo colonne inutili e creiamo un unico DataFrame per utente.
-  - Calcoliamo la media di ogni feature sul train e usiamo queste medie per riempire i valori mancanti (imputazione).
-  - Applichiamo lo `StandardScaler`: sottrae la media e divide per la deviazione standard di ogni colonna; lo salviamo per riusarlo in inferenza.
+  - Per scalare i dati (renderli confrontabili tra utenti diversi) serve la media e la varianza globale.
+  - Invece di inviare i dati al server, inviamo solo i totali parziali. La matematica garantisce che la media calcolata dai totali è identica alla media calcolata sui dati uniti, ma la privacy è salva.
 
 - **Che cos'e' un MLP (il modello)**
 
