@@ -4,7 +4,12 @@
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATASET_PATH = os.path.join(BASE_DIR, "..", "DATASET", "CSV_train")
+PROJECT_ROOT = os.path.join(BASE_DIR, "..", "..") # Risale src/ENSEMBLE -> src -> Root
+DATASET_PATH = os.path.join(PROJECT_ROOT, "src", "DATASET", "CSV_train")
+ARTIFACTS_DIR = os.path.join(PROJECT_ROOT, "artifacts")
+
+# Ensure artifacts dir exists
+os.makedirs(ARTIFACTS_DIR, exist_ok=True)
 
 SEED = 42
 

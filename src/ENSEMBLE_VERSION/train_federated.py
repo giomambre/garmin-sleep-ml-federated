@@ -6,11 +6,12 @@ import joblib
 import torch.optim as optim
 from sklearn.model_selection import GroupShuffleSplit, GroupKFold
 from sklearn.metrics import mean_absolute_error, r2_score
-from config import SEED, DATASET_PATH, ROUNDS, LOCAL_EPOCHS, BATCH_SIZE, LR, HIDDEN_1, HIDDEN_2, HIDDEN_3, DROPOUT, TARGET_SCALE, CLIENT_FRACTION, NUM_FOLDS, TOP_FEATURES
+from config import SEED, DATASET_PATH, ROUNDS, LOCAL_EPOCHS, BATCH_SIZE, LR, HIDDEN_1, HIDDEN_2, HIDDEN_3, DROPOUT, TARGET_SCALE, CLIENT_FRACTION, NUM_FOLDS, TOP_FEATURES, ARTIFACTS_DIR
 from model import SleepNet
 from data_utils import load_clients, FederatedScaler, transform_clients
 from client import train_local
 from server import fed_avg
+import os
 
 def run_training():
     # Carichiamo i dati grezzi dal disco
@@ -54,7 +55,8 @@ def run_training():
         fed_scaler.fit_federated(train_clients_raw, TOP_FEATURES)
 
         # Salvo lo scaler di questo fold per usarlo dopo
-        joblib.dump(fed_scaler, f"federated_scaler_fold_{fold}.joblib")
+        scaler_path = os.path.join(ARTIFACTS_DIR, f"federated_scaler_fold_{fold}.joblib")
+        joblib.dump(fed_scaler, scaler_path)
 
         # Ora ogni client si normalizza i dati in casa sua usando le medie globali
         train_clients = transform_clients(train_clients_raw, fed_scaler)
@@ -121,7 +123,8 @@ def run_training():
                     if global_mae < best_mae:
                         best_mae = global_mae
                         patience = 0
-                        torch.save(model.state_dict(), f"best_federated_model_fold_{fold}.pt")
+                        model_path = os.path.join(ARTIFACTS_DIR, f"best_federated_model_fold_{fold}.pt")
+                        torch.save(model.state_dict(), model_path)
                         print(f"  -> Nuovo record! Modello salvato (MAE: {global_mae:.4f})")
                     else:
                         # Se non migliora per un po', abbasso il learning rate per andare più piano

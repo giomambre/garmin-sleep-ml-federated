@@ -12,7 +12,7 @@ sys.path.append(current_dir) # Add src/
 sys.path.append(os.path.join(current_dir, 'ENSEMBLE_VERSION')) # Add src/ENSEMBLE_VERSION
 
 from ENSEMBLE_VERSION.model import SleepNet
-from ENSEMBLE_VERSION.config import TOP_FEATURES, TARGET_SCALE, BASE_DIR, NUM_FOLDS
+from ENSEMBLE_VERSION.config import TOP_FEATURES, TARGET_SCALE, BASE_DIR, NUM_FOLDS, ARTIFACTS_DIR
 from ENSEMBLE_VERSION.data_utils import extract_time_series_features, DROP_COLS
 
 # Qui ho inserito i risultati MAE (Mean Absolute Error) che ho ottenuto durante il training dei 5 fold.
@@ -56,14 +56,14 @@ def run_weighted_inference():
         print(f"Processing Fold {fold} with weight {weight:.4f}...")
         
         # Load Scaler
-        scaler_path = f"federated_scaler_fold_{fold}.joblib"
+        scaler_path = os.path.join(ARTIFACTS_DIR, f"federated_scaler_fold_{fold}.joblib")
         fed_scaler = joblib.load(scaler_path)
         
         X_np = fed_scaler.transform(df_features)
         X = torch.tensor(X_np, dtype=torch.float32)
 
         # Load Model
-        model_path = f"best_federated_model_fold_{fold}.pt"
+        model_path = os.path.join(ARTIFACTS_DIR, f"best_federated_model_fold_{fold}.pt")
         model = SleepNet(len(TOP_FEATURES))
         model.load_state_dict(torch.load(model_path))
         model.eval()
@@ -76,9 +76,10 @@ def run_weighted_inference():
     # Finalize
     weighted_preds = np.clip(weighted_preds, 0, 100).round().astype(int)
 
+    submission_path = os.path.join(ARTIFACTS_DIR, "submission_weighted.csv")
     submission = pd.DataFrame({'id': ids, 'label': weighted_preds})
-    submission.to_csv("submission_weighted.csv", index=False)
-    print("Weighted Ensemble saved to 'submission_weighted.csv'.")
+    submission.to_csv(submission_path, index=False)
+    print(f"Weighted Ensemble saved to '{submission_path}'.")
     print(submission.head())
 
 if __name__ == "__main__":
