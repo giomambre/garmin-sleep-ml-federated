@@ -42,4 +42,3 @@ Tutti i comandi devono essere eseguiti dalla root del progetto con l'ambiente vi
    ```
 
 ## 📊 Risultati Previsti
-Il sistema è stato ottimizzato per ridurre l'overfitting locale (specialmente nella versione RF). La validazione incrociata indica un MAE atteso inferiore a **11.0**, posizionando il modello competitivamente per la classifica Kaggle.
