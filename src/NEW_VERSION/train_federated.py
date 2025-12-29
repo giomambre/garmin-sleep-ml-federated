@@ -4,8 +4,8 @@ import random
 import numpy as np
 import joblib
 from sklearn.model_selection import GroupShuffleSplit
-from sklearn.metrics import mean_absolute_error
-from config import *
+from sklearn.metrics import mean_absolute_error, r2_score
+from config import SEED, DATASET_PATH, ROUNDS, LOCAL_EPOCHS, BATCH_SIZE, LR, HIDDEN_1, HIDDEN_2, HIDDEN_3, DROPOUT, TARGET_SCALE, CLIENT_FRACTION, TOP_FEATURES
 from model import SleepNet
 from data_utils import load_clients, FederatedScaler, transform_clients
 from client import train_local
@@ -19,22 +19,7 @@ np.random.seed(SEED)
 print("Loading data...")
 clients_raw = load_clients(DATASET_PATH)
 
-# usa top 25 feature RF 
-TOP_FEATURES = [
-    'act_activeKilocalories', 'act_totalCalories',
-    'resp_avgTomorrowSleepRespirationValue',
-    'sleep_remSleepSeconds', 'act_distance',
-    'str_avgStressLevel', 'sleep_sleepTimeSeconds',
-    'sleep_awakeSleepSeconds', 'hr_maxHeartRate',
-    'sleep_deepSleepSeconds', 'sleep_lightSleepSeconds',
-    'sleep_avgSleepStress', 'hr_lastSevenDaysAvgRestingHeartRate',
-    'str_maxStressLevel', 'hr_minHeartRate',
-    'hr_restingHeartRate', 'sleep_napTimeSeconds',
-    'sleep_lowestRespirationValue', 'sleep_avgHeartRate',
-    'resp_highestRespirationValue',
-    'resp_avgSleepRespirationValue', 'resp_avgWakingRespirationValue',
-    'resp_lowestRespirationValue'
-]
+import torch.optim as optim
 
 # Split a livello utente PRIMA del preprocessing per evitare data leakage
 users = list(clients_raw.keys())
@@ -65,33 +50,35 @@ print("Transforming data locally...")
 train_clients = transform_clients(train_clients_raw, fed_scaler)
 val_clients = transform_clients(val_clients_raw, fed_scaler)
 
-# Costruiamo il validation set concatenato per la valutazione (solo per monitoraggio)
-X_val, y_val = [], []
+# Costruiamo il validation set per utente per calcolare metriche per bucket
+val_clients_data = {}
 for u in val_clients:
     Xc, yc = val_clients[u]
-    X_val.append(Xc)
-    y_val.append(yc)
-
-X_val = np.concatenate(X_val, axis=0)
-y_val = np.concatenate(y_val, axis=0)
-X_val_torch = torch.tensor(X_val, dtype=torch.float32)
+    val_clients_data[u] = (torch.tensor(Xc, dtype=torch.float32), yc)
 
 model = SleepNet(len(TOP_FEATURES))
 
 print("Start Federated Training...")
 best_mae = float('inf')
+current_lr = LR
+patience = 0
 
 for r in range(ROUNDS):
     client_states = []
     client_sizes = []
 
-    for user, data in train_clients.items():
+    # Seleziona un sottoinsieme casuale di client per questo round
+    num_sampled_clients = max(1, int(len(train_users) * CLIENT_FRACTION))
+    sampled_users = random.sample(train_users, num_sampled_clients)
+
+    for user in sampled_users:
+        data = train_clients[user]
         # Ogni client riceve il modello globale corrente come punto di partenza
         local_model = SleepNet(len(TOP_FEATURES))
         local_model.load_state_dict(model.state_dict())
 
         state, n_samples = train_local(
-            local_model, data, LOCAL_EPOCHS, LR
+            local_model, data, LOCAL_EPOCHS, current_lr
         )
         client_states.append(state)
         client_sizes.append(n_samples)
@@ -102,15 +89,36 @@ for r in range(ROUNDS):
     if (r + 1) % 5 == 0:
         model.eval()
         with torch.no_grad():
-            preds = model(X_val_torch).numpy().flatten() * TARGET_SCALE
-            y_true = y_val.flatten() * TARGET_SCALE
-            mae = mean_absolute_error(y_true, preds)
-            print(f"Round {r+1}/{ROUNDS} - Val MAE: {mae:.4f}")
+            all_preds = []
+            all_y_true = []
+            mae_per_user = []
             
-            if mae < best_mae:
-                best_mae = mae
+            for u, (X_u, y_u) in val_clients_data.items():
+                preds_u = model(X_u).numpy().flatten() * TARGET_SCALE
+                y_true_u = y_u.flatten() * TARGET_SCALE
+                mae_u = mean_absolute_error(y_true_u, preds_u)
+                mae_per_user.append(mae_u)
+                all_preds.extend(preds_u)
+                all_y_true.extend(y_true_u)
+            
+            global_mae = mean_absolute_error(all_y_true, all_preds)
+            global_r2 = r2_score(all_y_true, all_preds)
+            avg_mae_per_user = np.mean(mae_per_user)
+            
+            print(f"Round {r+1}/{ROUNDS} - Global MAE: {global_mae:.4f}, R²: {global_r2:.4f}, Avg MAE per user: {avg_mae_per_user:.4f}")
+            
+            if global_mae < best_mae:
+                best_mae = global_mae
+                patience = 0
                 torch.save(model.state_dict(), "best_federated_model.pt")
-                print(f"  -> New best model saved! (MAE: {mae:.4f})")
+                print(f"  -> New best model saved! (MAE: {global_mae:.4f})")
+            else:
+                patience += 1
+                if patience >= 2: # Reduce after 2 checks (10 rounds) without improvement
+                    current_lr *= 0.5
+                    patience = 0
+                    print(f"  -> Reducing Learning Rate to {current_lr:.6f}")
+
         model.train()
     else:
         print(f"Round {r+1}/{ROUNDS} completed")
