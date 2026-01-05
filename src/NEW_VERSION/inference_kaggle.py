@@ -4,48 +4,31 @@ import torch
 import pandas as pd
 import numpy as np
 from model import SleepNet
-from data_utils import DROP_COLS, FederatedScaler
-from config import TARGET_SCALE, DATASET_PATH
+from data_utils import DROP_COLS, FederatedScaler, extract_time_series_features
+from config import TARGET_SCALE, BASE_DIR, TOP_FEATURES
 import joblib
 
 # Carichiamo lo scaler federato (contiene medie e std globali)
 fed_scaler = joblib.load("federated_scaler.joblib")
-
-TOP_FEATURES = [
-    'act_activeKilocalories',
-    'act_totalCalories',
-    'resp_avgTomorrowSleepRespirationValue',
-    'sleep_remSleepSeconds',
-    'act_distance',
-    'str_avgStressLevel',
-    'sleep_sleepTimeSeconds',
-    'sleep_awakeSleepSeconds',
-    'hr_maxHeartRate',
-    'sleep_deepSleepSeconds',
-    'sleep_lightSleepSeconds',
-    'sleep_avgSleepStress',
-    'hr_lastSevenDaysAvgRestingHeartRate',
-    'str_maxStressLevel',
-    'hr_minHeartRate',
-    'hr_restingHeartRate',
-    'sleep_napTimeSeconds',
-    'sleep_lowestRespirationValue',
-    'sleep_avgHeartRate',
-    'resp_highestRespirationValue',
-    'resp_avgSleepRespirationValue',
-    'resp_avgWakingRespirationValue',
-    'resp_lowestRespirationValue'
-]
 
 model = SleepNet(len(TOP_FEATURES))
 # Carichiamo il modello migliore salvato durante il training
 model.load_state_dict(torch.load("best_federated_model.pt"))
 model.eval()
 
-test_path = os.path.join(DATASET_PATH, "x_test.csv")
+test_path = os.path.join(BASE_DIR, "..", "DATASET", "x_test.csv")
 df = pd.read_csv(test_path, sep=';')
 df.columns = df.columns.str.strip()
-ids = df['day'].values if 'day' in df.columns else np.arange(len(df))
+
+# Save IDs for submission
+if 'id' in df.columns:
+    ids = df['id'].values
+else:
+    ids = np.arange(len(df))
+
+# Extract TS features BEFORE dropping columns
+df = extract_time_series_features(df)
+
 df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
 
 # Usiamo il metodo transform dello scaler federato

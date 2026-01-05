@@ -4,16 +4,22 @@
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATASET_PATH = os.path.join(BASE_DIR, "..", "DATASET", "CSV_train")
+PROJECT_ROOT = os.path.join(BASE_DIR, "..", "..") # Risale src/ENSEMBLE -> src -> Root
+DATASET_PATH = os.path.join(PROJECT_ROOT, "src", "DATASET", "CSV_train")
+ARTIFACTS_DIR = os.path.join(PROJECT_ROOT, "artifacts")
+
+# Ensure artifacts dir exists
+os.makedirs(ARTIFACTS_DIR, exist_ok=True)
 
 SEED = 42
 
 # Training
-ROUNDS = 75         # federated rounds (più iterazioni per convergere)
+ROUNDS = 50         # federated rounds (più iterazioni per convergere)
 LOCAL_EPOCHS = 5    # epochs per client (ridotto per evitare overfitting)
 BATCH_SIZE = 16
 LR = 5e-4            # LR più basso per convergenza stabile
 CLIENT_FRACTION = 0.5 # Fraction of clients to sample in each round (e.g., 0.5 for 50%)
+NUM_FOLDS = 5       # Numero di modelli nell'ensemble
 
 # Model
 HIDDEN_1 = 256      # Increased capacity
