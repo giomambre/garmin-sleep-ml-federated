@@ -1,0 +1,1031 @@
+
+--- 20251124.pdf :: page 1/42 ---
+Creativity, Science and 
+Innovation
+Introduction to 
+Machine Learning for 
+Time Series analysis
+November 24th, 2025
+Alessandro Verosimile
+alessandro.verosimile@polimi.it
+1
+
+--- 20251124.pdf :: page 2/42 ---
+2
+Machine Learning tasks with Time Series: Use case
+Objective: classify the activity (walking, running, going upstairs, etc) of a person 
+given data from an accelerometer
+
+--- 20251124.pdf :: page 3/42 ---
+3
+Machine Learning tasks with Time Series: Use case
+Steps to train a ML model on this task:
+1. Collect a dataset with time series (x, y, and z from 
+accelerometer). Each time series has an associated 
+label that indicates the activity performed.
+2. Train an ML model that learns to predict the Label 
+given X, Y, and Z
+•
+When you have the final model, you will be able to use 
+it in inference mode on new data coming from the 
+device
+X
+Y
+Z
+Label
+[2,-1,4,...]
+[12,5,8,...]
+[9,5,8,...]
+Walking (0)
+[2,-2,4,...]
+[11,2,9,...]
+[4,1,5,...]
+Running (1)
+[1,3,-1,...]
+[10,5,7,...]
+[4,1,5,...]
+Walking (0)
+[2,-1,1,...]
+[8,11,8,...]
+[5,5,7,...]
+Walking (0)
+[1,5,3,...]
+[9,5,8,...]
+[8,2,8,...]
+Going up (2)
+[2,-1,4,...]
+[5,5,7,...]
+[2,3,4,...]
+Walking (0)
+[4,5,9,...]
+[4,5,9,...]
+[4,1,5,...]
+Walking (0)
+1
+
+--- 20251124.pdf :: page 4/42 ---
+4
+Machine Learning tasks with Time Series: Use case
+Steps to train a ML model on this task:
+1. Collect a dataset with time series (x, y, and z from 
+accelerometer). Each time series has an associated 
+label that indicates the activity performed.
+2. Train an ML model on such data. The model will learn 
+to predict the Label given X, Y, and Z
+•
+When you have the final model, you will be able to use 
+it in inference mode on new data coming from the 
+device
+X
+Y
+Z
+Label
+[2,-1,4,...]
+[12,5,8,...]
+[9,5,8,...]
+Walking (0)
+[2,-2,4,...]
+[11,2,9,...]
+[4,1,5,...]
+Running (1)
+[1,3,-1,...]
+[10,5,7,...]
+[4,1,5,...]
+Walking (0)
+[2,-1,1,...]
+[8,11,8,...]
+[5,5,7,...]
+Walking (0)
+[1,5,3,...]
+[9,5,8,...]
+[8,2,8,...]
+Going up (2)
+[2,-1,4,...]
+[5,5,7,...]
+[2,3,4,...]
+Walking (0)
+[4,5,9,...]
+[4,5,9,...]
+[4,1,5,...]
+Walking (0)
+ML model
+1
+2
+
+--- 20251124.pdf :: page 5/42 ---
+5
+Machine Learning tasks with Time Series: Use case
+Steps to train a ML model on this task:
+1. Collect a dataset with time series (x, y, and z from 
+accelerometer). Each time series has an associated 
+label that indicates the activity performed.
+2. Train an ML model on such data. The model will learn 
+to predict the Label given X, Y, and Z
+3. When you have the final model, you will be able to 
+use it in inference mode on new data coming from 
+the device
+X
+Y
+Z
+Label
+[2,-1,4,...]
+[12,5,8,...]
+[9,5,8,...]
+Walking (0)
+[2,-2,4,...]
+[11,2,9,...]
+[4,1,5,...]
+Running (1)
+[1,3,-1,...]
+[10,5,7,...]
+[4,1,5,...]
+Walking (0)
+[2,-1,1,...]
+[8,11,8,...]
+[5,5,7,...]
+Walking (0)
+[1,5,3,...]
+[9,5,8,...]
+[8,2,8,...]
+Going up (2)
+[2,-1,4,...]
+[5,5,7,...]
+[2,3,4,...]
+Walking (0)
+[4,5,9,...]
+[4,5,9,...]
+[4,1,5,...]
+Walking (0)
+ML model
+1
+2
+Prediction
+3
+
+--- 20251124.pdf :: page 6/42 ---
+6
+Machine Learning tasks with Time Series
+•
+Forecasting: You have n values of the time
+series in input, and you want to predict the
+value
+at
+time
+n+1.
+(example:
+bitcoin
+forecasting, weather forecasting)
+•
+Classification: You have n values of the time
+series in input, and you want to predict the
+class
+it
+belongs
+to.
+(example:
+activity
+recognition from accelerometer data)
+
+--- 20251124.pdf :: page 7/42 ---
+7
+Machine Learning categories
+
+--- 20251124.pdf :: page 8/42 ---
+8
+Supervised Machine Learning: an example
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+
+--- 20251124.pdf :: page 9/42 ---
+9
+Supervised Machine Learning: an example
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Blood Pr = W1 * Weight + W0
+112 = W1 * 54 + W0
+130 = W1 * 68 + W0
+
+--- 20251124.pdf :: page 10/42 ---
+10
+10
+Supervised Machine Learning: an example
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+54 68
+112
+130
+Blood Pr = W1 * Weight + W0
+112 = W1 * 54 + W0
+130 = W1 * 68 + W0
+
+--- 20251124.pdf :: page 11/42 ---
+11
+11
+Supervised Machine Learning: an example
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Patient 3
+57
+115
+Patient 4
+56
+116
+Patient 5
+77
+132
+Patient 6
+81
+138
+Patient 7
+74
+130
+Patient 8
+66
+122
+
+--- 20251124.pdf :: page 12/42 ---
+12
+12
+Supervised Machine Learning: an example
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Patient 3
+57
+115
+Patient 4
+56
+116
+Patient 5
+77
+132
+Patient 6
+81
+138
+Patient 7
+74
+130
+Patient 8
+66
+122
+
+--- 20251124.pdf :: page 13/42 ---
+13
+13
+Supervised Machine Learning: an example
+112 = W1 * 54 + W0
+130 = W1 * 68 + W0
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Patient 3
+57
+115
+Patient 4
+56
+116
+Patient 5
+77
+132
+Patient 6
+81
+138
+Patient 7
+74
+130
+Patient 8
+66
+122
+…
+122 = W1 * 66 + W0
+?
+
+--- 20251124.pdf :: page 14/42 ---
+14
+14
+Supervised Machine Learning: an example
+112 = W1 * 54 + W0
+130 = W1 * 68 + W0
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Patient 3
+57
+115
+Patient 4
+56
+116
+Patient 5
+77
+132
+Patient 6
+81
+138
+Patient 7
+74
+130
+Patient 8
+66
+122
+…
+122 = W1 * 66 + W0
+No solution, but…
+
+--- 20251124.pdf :: page 15/42 ---
+15
+15
+Supervised Machine Learning: an example
+112 = W1 * 54 + W0
+130 = W1 * 68 + W0
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Patient 3
+57
+115
+Patient 4
+56
+116
+Patient 5
+77
+132
+Patient 6
+81
+138
+Patient 7
+74
+130
+Patient 8
+66
+122
+…
+122 = W1 * 66 + W0
+
+--- 20251124.pdf :: page 16/42 ---
+16
+16
+Supervised Machine Learning: an example
+112 = W1 * 54 + W0
+130 = W1 * 68 + W0
+X = Weight 
+Y = Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Patient 3
+57
+115
+Patient 4
+56
+116
+Patient 5
+77
+132
+Patient 6
+81
+138
+Patient 7
+74
+130
+Patient 8
+66
+122
+…
+122 = W1 * 66 + W0
+𝐿= ෍
+𝑖
+(𝑦𝑖−(𝑊1𝑋𝑖+ 𝑊0 ))
+Some mathematical algorithms allow to find the
+weights that minimize such quantity, called 
+loss function
+
+--- 20251124.pdf :: page 17/42 ---
+17
+17
+Supervised Machine Learning: an example
+112 = W1 * 54 + W0
+130 = W1 * 68 + W0
+Weight 
+Blood Pr.
+Patient 1
+54
+112
+Patient 2
+68
+130
+Patient 3
+57
+115
+Patient 4
+56
+116
+Patient 5
+77
+132
+Patient 6
+81
+138
+Patient 7
+74
+130
+Patient 8
+66
+122
+…
+122 = W1 * 66 + W0
+Can we do better?
+
+--- 20251124.pdf :: page 18/42 ---
+18
+18
+Supervised Machine Learning: an example
+112 = W2 * 542 W1 * 54 + W0
+130 = W2 * 682 W1 * 68 + W0
+Weight 
+Weight2
+Blood Pr.
+Patient 1
+54
+542
+112
+Patient 2
+68
+682
+130
+Patient 3
+57
+572
+115
+Patient 4
+56
+562
+116
+Patient 5
+77
+772
+132
+Patient 6
+81
+812
+138
+Patient 7
+74
+742
+130
+Patient 8
+66
+662
+122
+…
+122 = W2 * 662 W1 * 66 + W0
+So increasing the degree of the 
+polynomial will always be better, right?
+
+--- 20251124.pdf :: page 19/42 ---
+19
+19
+Supervised Machine Learning: an example
+112 = W2 * 542 W1 * 54 + W0
+130 = W2 * 682 W1 * 68 + W0
+Weight 
+Weight2
+Blood Pr.
+Patient 1
+54
+542
+112
+Patient 2
+68
+682
+130
+Patient 3
+57
+572
+115
+Patient 4
+56
+562
+116
+Patient 5
+77
+772
+132
+Patient 6
+81
+812
+138
+Patient 7
+74
+742
+130
+Patient 8
+66
+662
+122
+…
+122 = W2 * 662 W1 * 66 + W0
+NO, overfitting!
+
+--- 20251124.pdf :: page 20/42 ---
+20
+20
+Supervised Machine Learning: an example
+112 = W2 * 542 W1 * 54 + W0
+130 = W2 * 682 W1 * 68 + W0
+Weight 
+Weight2
+Blood Pr.
+Patient 1
+54
+542
+112
+Patient 2
+68
+682
+130
+Patient 3
+57
+572
+115
+Patient 4
+56
+562
+116
+Patient 5
+77
+772
+132
+Patient 6
+81
+812
+138
+Patient 7
+74
+742
+130
+Patient 8
+66
+662
+122
+…
+122 = W2 * 662 W1 * 66 + W0
+NO, overfitting!
+New data points
+
+--- 20251124.pdf :: page 21/42 ---
+21
+21
+Supervised Machine Learning: an example
+112 = W2 * 542 W1 * 54 + W0
+130 = W2 * 682 W1 * 68 + W0
+Weight 
+Weight2
+Blood Pr.
+Patient 1
+54
+542
+112
+Patient 2
+68
+682
+130
+Patient 3
+57
+572
+115
+Patient 4
+56
+562
+116
+Patient 5
+77
+772
+132
+Patient 6
+81
+812
+138
+Patient 7
+74
+742
+130
+Patient 8
+66
+662
+122
+…
+122 = W2 * 662 W1 * 66 + W0
+NO, overfitting!
+New data points
+To be sure to avoid this situation, we 
+always need to take some data apart to 
+validate our model
+
+--- 20251124.pdf :: page 22/42 ---
+22
+22
+Some important rules
+•
+Always split your dataset to be able to evaluate the model and control overfitting. Usually, for ML tasks, 
+you use 70% of the data for the training, 10% for the validation, and 20% for the test set. More 
+complex strategies to better utilize your data are K-Fold Cross Validation or Leave One Out 
+•
+To avoid overfitting you use regularization techniques; some models in the online libraries such as 
+Scikit Learn use regularization techniques by default.
+•
+The validation set is used to choose the best hyperparameters (for instance, the grade of the 
+polynomial in the simple example before). In complex models you have a huge number of parameters 
+and you have tu carefully choose them. 
+•
+Be careful to the difference between parameters and hyperparameters. The parameters are learnt 
+from the model (the coefficients Wi of the previous linear regression), the hyperparameters determine 
+the model’s shape and complexity, and they are decided by the developer (the degree of the 
+polynomial). 
+
+--- 20251124.pdf :: page 23/42 ---
+23
+23
+Supervised Machine Learning: classification
+Weight 
+Weight2
+Pathology
+Patient 1
+54
+542
+True
+Patient 2
+68
+682
+False
+Patient 3
+57
+572
+False
+Patient 4
+56
+562
+False
+Patient 5
+77
+772
+True
+Patient 6
+81
+812
+False
+Patient 7
+74
+742
+False
+Patient 8
+66
+662
+True
+True
+False
+
+--- 20251124.pdf :: page 24/42 ---
+24
+24
+Supervised Machine Learning: classification
+Weight 
+Blood Pr
+Pathology
+Patient 1
+54
+542
+True
+Patient 2
+68
+682
+False
+Patient 3
+57
+572
+False
+Patient 4
+56
+562
+False
+Patient 5
+77
+772
+True
+Patient 6
+81
+812
+False
+Patient 7
+74
+742
+False
+Patient 8
+66
+662
+True
+True
+False
+
+--- 20251124.pdf :: page 25/42 ---
+25
+25
+Most famous ML models that work with tabular data
+Regression 
+•
+Linear regression, and all its regularized 
+variants (Ridge regression, Lasso 
+regression, ecc)
+•
+Decision Tree based models and 
+ensembles (Random Forests, Xgboost, 
+ecc)
+•
+K-Nearest-neighbours
+Classification
+•
+Logistic regression
+•
+Decision Tree based models and 
+ensembles (Random Forests, Xgboost, 
+ecc)
+•
+K-Nearest-neighbours
+•
+Support Vector Machines
+•
+Naive Bayes
+
+--- 20251124.pdf :: page 26/42 ---
+26
+26
+Decision Trees
+
+--- 20251124.pdf :: page 27/42 ---
+27
+27
+Decision Trees
+
+--- 20251124.pdf :: page 28/42 ---
+28
+28
+Random Forests
+
+--- 20251124.pdf :: page 29/42 ---
+29
+29
+How can we use this models for dealing with Time series?
+
+--- 20251124.pdf :: page 30/42 ---
+30
+30
+How can we use this models for dealing with Time series?
+1st alternative
+•
+Extract features: Mean, Standard 
+Deviation, etc…
+•
+Build a tabular dataset
+•
+Apply the previously mentioned models
+
+--- 20251124.pdf :: page 31/42 ---
+31
+31
+How can we use this models for dealing with Time series?
+1st alternative
+•
+Extract features: Mean, Standard 
+Deviation, etc…
+•
+Build a tabular dataset
+•
+Apply the previously mentioned models
+Coding time
+
+--- 20251124.pdf :: page 32/42 ---
+32
+32
+How can we use this models for dealing with Time series?
+2nd alternative
+•
+Use models that directly take as input the data in the format of a time series. 
+•
+Which models can do this?
+1st alternative
+•
+Extract features: Mean, Standard 
+Deviation, etc…
+•
+Build a tabular dataset
+•
+Apply the previously mentioned models
+
+--- 20251124.pdf :: page 33/42 ---
+33
+33
+How can we use this models for dealing with Time series?
+2nd alternative
+•
+Use models that directly take as input the data in the format of a time series. 
+•
+Which models can do this? Neural Networks
+1st alternative
+•
+Extract features: Mean, Standard 
+Deviation, etc…
+•
+Build a tabular dataset
+•
+Apply the previously mentioned models
+
+--- 20251124.pdf :: page 34/42 ---
+34
+34
+Supervised Machine Learning: Neural networks
+All the models we have seen until now 
+are linear in the feature space. 
+The main characteristic of Neural 
+Networks is the introduction of Non-
+linearities
+
+--- 20251124.pdf :: page 35/42 ---
+35
+35
+Supervised Machine Learning: Neural networks
+How is this linearity introduced?
+Weight
+1
+Bias term
+Systolic BP
+w1
+w0
+Classical Linear Regression
+
+--- 20251124.pdf :: page 36/42 ---
+36
+36
+Supervised Machine Learning: Neural networks
+How is this linearity introduced?
+Weight
+1
+Bias term
+Systolic BP
+w1
+w0
+Weight
+1
+Bias term
+Systolic BP
+Classical Linear Regression
+Non-linear?
+W1
+W2
+
+--- 20251124.pdf :: page 37/42 ---
+37
+37
+Supervised Machine Learning: Neural networks
+How is this linearity introduced?
+Weight
+1
+Bias term
+Systolic BP
+w1
+w0
+Weight
+1
+Bias term
+Systolic BP
+Classical Linear Regression
+Non-linear?
+W1
+W2
+No! 
+W1 is a 2x3 matrix
+W2 is a 3x1 matrix
+In the end, the result is just a 2x1 
+matrix, just the two same parameter of 
+the classical linear regression
+
+--- 20251124.pdf :: page 38/42 ---
+38
+38
+Supervised Machine Learning: Neural networks
+How is this linearity introduced?
+Weight
+1
+Bias term
+Systolic BP
+W1
+W2
+The nonlinearity comes from a new 
+element that is introduced in the 
+hidden neurons, called activation 
+function
+
+--- 20251124.pdf :: page 39/42 ---
+39
+39
+Supervised Machine Learning: Neural networks
+How is this linearity introduced?
+Weight
+1
+Bias term
+Systolic BP
+W1
+W2
+The nonlinearity comes from a new 
+element that is introduced in the 
+hidden neurons, called activation 
+function
+Neural networks can learn complex and 
+nonlinear patterns.
+However, you have to be careful: they 
+tend to overfit much easier and, 
+therefore, need a lot of data and careful 
+regularization techniques to work well. 
+
+--- 20251124.pdf :: page 40/42 ---
+40
+40
+Best Deep Learning models for time series
+Many variants of classical Neural Networks exist to deal with complex and structured data (such 
+as images, graphs, or time series). These are the most suitable for the latter:
+•
+Recurrent Neural Networks (RNN)
+•
+1D Convolutional Neural Networks (1D CNN)
+•
+Long-Short Time Memory (LSTM)
+•
+Bidirectional LSTM
+•
+Gated Recurrent Units (GRU)
+
+--- 20251124.pdf :: page 41/42 ---
+Creativity, Science and 
+Innovation
+Thank you for 
+your attention
+November 24th, 2025
+Alessandro Verosimile
+alessandro.verosimile@polimi.it
+41
+
+--- 20251124.pdf :: page 42/42 ---
+Creativity, Science and 
+Innovation
+Thank you for 
+your attention
+Coding time
+November 24th, 2025
+Alessandro Verosimile
+alessandro.verosimile@polimi.it
+42

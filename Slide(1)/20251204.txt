@@ -1,0 +1,169 @@
+
+--- 20251204.pdf :: page 1/17 ---
+Creativity, Science and 
+Innovation
+Federated Learning
+Data anomalies
+December 4th, 2025
+Alessandro Verosimile
+alessandro.verosimile@polimi.it
+1
+
+--- 20251204.pdf :: page 2/17 ---
+2
+Horizontal Federated Learning
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251204.pdf :: page 3/17 ---
+3
+Horizontal Federated Learning
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251204.pdf :: page 4/17 ---
+4
+Horizontal Federated Learning
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251204.pdf :: page 5/17 ---
+5
+Horizontal Federated Learning
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251204.pdf :: page 6/17 ---
+6
+Horizontal Federated Learning
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Model aggregation
+
+--- 20251204.pdf :: page 7/17 ---
+7
+Horizontal Federated Learning
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Model aggregation
+How are these data distributed?
+
+--- 20251204.pdf :: page 8/17 ---
+8
+Horizontal Federated Learning:
+Statistical challenges
+Class imbalance
+
+--- 20251204.pdf :: page 9/17 ---
+9
+Horizontal Federated Learning: Statistical challenges
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Class imbalance
+Walk   Run Stand  
+Walk   Run Stand  Walk   Run Stand  
+Walk   Run Stand  Walk   Run Stand  
+
+--- 20251204.pdf :: page 10/17 ---
+10
+Feature imbalance
+Horizontal Federated Learning: Statistical challenges
+
+--- 20251204.pdf :: page 11/17 ---
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Feature imbalance
+Age distribution
+Horizontal Federated Learning: Statistical challenges
+
+--- 20251204.pdf :: page 12/17 ---
+12
+Size imbalance
+Horizontal Federated Learning: Statistical challenges
+
+--- 20251204.pdf :: page 13/17 ---
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Size imbalance
+1000 samples
+10 samples
+100 samples
+50 samples
+1200 samples
+Horizontal Federated Learning: Statistical challenges
+
+--- 20251204.pdf :: page 14/17 ---
+Data augmentation: generate new «fake» samples.
+ 
+This is the most applied solution for problems 1 and 3.
+It allows to balance the class distributions and the dataset 
+sizes among all the clients.
+Possible augmentations:
+•
+Add noise to existing samples
+•
+Apply geometric transformations to existing samples
+•
+Interpolate couples of samples
+1. Class imbalance
+2. Feature imbalance
+3. Size imbalance
+Solutions
+Geometric transformations
+Horizontal Federated Learning: Statistical challenges
+
+--- 20251204.pdf :: page 15/17 ---
+1. Class imbalance
+2. Feature imbalance
+3. Size imbalance
+Horizontal Federated Learning: Statistical challenges
+
+--- 20251204.pdf :: page 16/17 ---
+Transfer Learning: start from a pre-defined model that 
+has been trained over sufficiently big and generic data
+Multitask Learning: train the model to solve multiple 
+tasks to learn more general representations
+ 
+1. Class imbalance
+2. Feature imbalance
+3. Size imbalance
+Solutions
+Horizontal Federated Learning: Statistical challenges
+[1] https://it.mathworks.com/discovery/transfer-learning.html
+
+--- 20251204.pdf :: page 17/17 ---
+Creativity, Science and 
+Innovation
+Thank you for 
+your attention
+December 1st, 2025
+Alessandro Verosimile
+alessandro.verosimile@polimi.it
+17

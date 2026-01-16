@@ -1,4 +1,7 @@
 # inference_kaggle.py
+# Questo file genera le previsioni finali per la submission a Kaggle
+# È la "fase finale": usiamo tutti i modelli allenati per fare previsioni sull'insieme di test
+
 import os
 import torch
 import pandas as pd
@@ -9,7 +12,25 @@ from data_utils import DROP_COLS, FederatedScaler, extract_time_series_features
 from config import TARGET_SCALE, BASE_DIR, NUM_FOLDS, TOP_FEATURES, ARTIFACTS_DIR
 
 def run_inference():
-    print(f"Starting Ensemble Inference with {NUM_FOLDS} models...")
+    """
+    Genera previsioni ensemble per il test set di Kaggle.
+    
+    Strategia ENSEMBLE:
+    Invece di usare un solo modello, usiamo TUTTI i 10 modelli (uno per fold).
+    Ogni modello fa la sua previsione, poi facciamo la MEDIA.
+    Questo rende le previsioni più robuste e riduce l'errore.
+    
+    Workflow:
+    1. Carica il test set
+    2. Estrae le feature (come per il training)
+    3. Per ogni fold:
+       - Carica lo scaler e il modello
+       - Fa previsioni
+       - Accumula le previsioni
+    4. Calcola la media delle previsioni
+    5. Salva il file di submission
+    """
+    print(f"Inizio Inference Ensemble con {NUM_FOLDS} modelli...")
     
     test_path = os.path.join(BASE_DIR, "..", "DATASET", "x_test.csv")
     df_orig = pd.read_csv(test_path, sep=';')
@@ -69,8 +90,7 @@ def run_inference():
     submission_path = os.path.join(ARTIFACTS_DIR, "submission_ensemble.csv")
     submission = pd.DataFrame({'id': ids, 'label': avg_preds})
     submission.to_csv(submission_path, index=False)
-    print(f"Ensemble inference complete. Saved to '{submission_path}'.")
+    print(f"Inference ensemble completata! Salvata in '{submission_path}'.")
 
 if __name__ == "__main__":
     run_inference()
-    

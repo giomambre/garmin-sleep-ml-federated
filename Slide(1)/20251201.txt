@@ -1,0 +1,836 @@
+
+--- 20251201.pdf :: page 1/56 ---
+Creativity, Science and 
+Innovation
+Introduction to 
+Federated Learning
+December 1st, 2025
+Alessandro Verosimile
+alessandro.verosimile@polimi.it
+1
+
+--- 20251201.pdf :: page 2/56 ---
+2
+Machine Learning Pipeline
+Steps to train a ML model:
+1.  Collect a dataset with the data of interest. Each user 
+(client) collects their own data to build a unique big 
+dataset for the task.
+2. Train an ML model that learns to predict the Label 
+given X, Y, and Z
+•
+When you have the final model, you will be able to use 
+it in inference mode on new data coming from the 
+device
+X
+Y
+Z
+Label
+[2,-1,4,...]
+[12,5,8,...]
+[9,5,8,...]
+Walking (0)
+[2,-2,4,...]
+[11,2,9,...]
+[4,1,5,...]
+Running (1)
+[1,3,-1,...]
+[10,5,7,...]
+[4,1,5,...]
+Walking (0)
+[2,-1,1,...]
+[8,11,8,...]
+[5,5,7,...]
+Walking (0)
+[1,5,3,...]
+[9,5,8,...]
+[8,2,8,...]
+Going up (2)
+[2,-1,4,...]
+[5,5,7,...]
+[2,3,4,...]
+Walking (0)
+[4,5,9,...]
+[4,5,9,...]
+[4,1,5,...]
+Walking (0)
+1
+
+--- 20251201.pdf :: page 3/56 ---
+3
+Steps to train a ML model:
+1.  Collect a dataset with the data of interest. Each user 
+(client) collects their own data to build a unique big 
+dataset for the task.
+2.  Train an ML model on such data. The model will learn 
+to predict the Label given the inputs
+•
+When you have the final model, you will be able to use 
+it in inference mode on new data coming from the 
+device
+X
+Y
+Z
+Label
+[2,-1,4,...]
+[12,5,8,...]
+[9,5,8,...]
+Walking (0)
+[2,-2,4,...]
+[11,2,9,...]
+[4,1,5,...]
+Running (1)
+[1,3,-1,...]
+[10,5,7,...]
+[4,1,5,...]
+Walking (0)
+[2,-1,1,...]
+[8,11,8,...]
+[5,5,7,...]
+Walking (0)
+[1,5,3,...]
+[9,5,8,...]
+[8,2,8,...]
+Going up (2)
+[2,-1,4,...]
+[5,5,7,...]
+[2,3,4,...]
+Walking (0)
+[4,5,9,...]
+[4,5,9,...]
+[4,1,5,...]
+Walking (0)
+ML model
+1
+2
+Machine Learning Pipeline
+
+--- 20251201.pdf :: page 4/56 ---
+4
+Steps to train a ML model:
+1.  Collect a dataset with the data of interest. Each user 
+(client) collects their own data to build a unique big 
+dataset for the task.
+2.  Train an ML model on such data. The model will learn 
+to predict the Label given the inputs
+3. When you have the final model, you will be able to 
+use it in inference mode on new data coming from 
+the device
+X
+Y
+Z
+Label
+[2,-1,4,...]
+[12,5,8,...]
+[9,5,8,...]
+Walking (0)
+[2,-2,4,...]
+[11,2,9,...]
+[4,1,5,...]
+Running (1)
+[1,3,-1,...]
+[10,5,7,...]
+[4,1,5,...]
+Walking (0)
+[2,-1,1,...]
+[8,11,8,...]
+[5,5,7,...]
+Walking (0)
+[1,5,3,...]
+[9,5,8,...]
+[8,2,8,...]
+Going up (2)
+[2,-1,4,...]
+[5,5,7,...]
+[2,3,4,...]
+Walking (0)
+[4,5,9,...]
+[4,5,9,...]
+[4,1,5,...]
+Walking (0)
+ML model
+1
+2
+Prediction
+3
+Machine Learning Pipeline
+
+--- 20251201.pdf :: page 5/56 ---
+5
+Why Federated Learning? 
+
+--- 20251201.pdf :: page 6/56 ---
+6
+Why Federated Learning? 
+Due to new regulations (GDPR), to 
+protect users’ privacy, sensitive data 
+cannot be shared
+
+--- 20251201.pdf :: page 7/56 ---
+7
+Why Federated Learning? 
+Due to new regulations (GDPR), to 
+protect users’ privacy, sensitive data 
+cannot be shared
+Communication overhead: when 
+dealing with heavy data, such as 
+images or volumes for medical data, 
+data transfer is an issue
+
+--- 20251201.pdf :: page 8/56 ---
+8
+Centralized training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251201.pdf :: page 9/56 ---
+9
+Centralized training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251201.pdf :: page 10/56 ---
+10
+Centralized training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251201.pdf :: page 11/56 ---
+11
+Centralized training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+ML model
+
+--- 20251201.pdf :: page 12/56 ---
+12
+Federated Learning training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251201.pdf :: page 13/56 ---
+13
+Federated Learning training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251201.pdf :: page 14/56 ---
+14
+Federated Learning training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251201.pdf :: page 15/56 ---
+15
+Federated Learning training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+
+--- 20251201.pdf :: page 16/56 ---
+16
+Federated Learning training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Model aggregation
+
+--- 20251201.pdf :: page 17/56 ---
+17
+Federated Learning training
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Model aggregation
+Which are the characteristics of the data over the different clients? 
+Which kind of 
+ML model?
+
+--- 20251201.pdf :: page 18/56 ---
+18
+Federated Learning Setup
+Model type
+•
+Different data sources share the same 
+features space: Horizontal FL
+•
+Different data sources share the same 
+sample space: Vertical FL
+•
+Neural Networks
+•
+Decision-Tree based Ensemble
+Based on the model type, the way in which the 
+federated training works is different
+Data characteristics
+
+--- 20251201.pdf :: page 19/56 ---
+19
+Federated Learning Setup
+Horizontal FL : Different data sources 
+share the same features space
+[1] Yang, Qiang, et al. "Federated machine learning: Concept and applications." ACM Transactions on Intelligent Systems and Technology (TIST) 10.2 (2019): 1-19.
+Vertical FL: Different data sources share 
+the same sample space
+Data characteristics
+
+--- 20251201.pdf :: page 20/56 ---
+20
+Federated Learning Setup
+Horizontal FL : Different data sources 
+share the same features space
+[1] Yang, Qiang, et al. "Federated machine learning: Concept and applications." ACM Transactions on Intelligent Systems and Technology (TIST) 10.2 (2019): 1-19.
+Vertical FL: Different data sources share 
+the same sample space
+Data characteristics
+
+--- 20251201.pdf :: page 21/56 ---
+21
+Horizontal Federated Learning – Neural Networks
+[1] Yang, Qiang, et al. "Federated machine learning: Concept and applications." ACM Transactions on Intelligent Systems and Technology (TIST) 10.2 (2019): 1-19.
+1. Weights (or only gradients) are 
+encrypted and sent from each 
+client to the central server
+2. The server aggregates the 
+models with a pre-defined 
+strategy (FedAvg)
+3. The aggregated model is sent 
+back to the clients
+4. The clients can evaluate the 
+aggregated model over their 
+own data
+4
+4
+4
+
+--- 20251201.pdf :: page 22/56 ---
+22
+Horizontal Federated Learning – Performance
+[1] Yang, Qiang, et al. "Federated machine learning: Concept and applications." ACM Transactions on Intelligent Systems and Technology (TIST) 10.2 (2019): 1-19.
+Typically, Federated models 
+improve the performance of models 
+trained only on local data, but they 
+rarely reach the performance of a 
+centralized training. 
+FL is a trade-off between privacy 
+and model performance
+Centralized model
+Federated model
+Local-only data model
+4
+4
+4
+Perf.
+Privacy
+
+--- 20251201.pdf :: page 23/56 ---
+23
+Horizontal Federated Learning – DT Ensembles
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+23
+
+--- 20251201.pdf :: page 24/56 ---
+24
+Horizontal Federated Learning – DT Ensembles
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+24
+
+--- 20251201.pdf :: page 25/56 ---
+25
+Horizontal Federated Learning – DT Ensembles
+Model aggregation
+HOW?
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+25
+
+--- 20251201.pdf :: page 26/56 ---
+26
+Horizontal Federated Learning – DT Ensembles
+26
+[2] Kowalek, P., Loch-Olszewska, H., & Szwabiński, J. (2019). Classification of diffusion modes in single-particle tracking data: Feature-based versus deep-learning approach. Physical Review E, 100(3), 032410.
+
+--- 20251201.pdf :: page 27/56 ---
+27
+Horizontal Federated Learning – DT Ensembles
+Random Forest – Naive aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: RF with N DTs
+27
+
+--- 20251201.pdf :: page 28/56 ---
+28
+Horizontal Federated Learning – DT Ensembles
+Random Forest – Naive aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: RF with N DTs
+28
+Request for sub-RF
+with N/5 DTs
+…
+…
+…
+…
+
+--- 20251201.pdf :: page 29/56 ---
+29
+Horizontal Federated Learning – DT Ensembles
+Random Forest – Naive aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: RF with N DTs
+29
+N/5 DTs
+…
+…
+…
+…
+
+--- 20251201.pdf :: page 30/56 ---
+30
+Horizontal Federated Learning – DT Ensembles
+XGboost Bagging
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: XGBoost with N DTs
+30
+[3] Di Gennaro, Marco, et al. "TimberStrike: Dataset Reconstruction Attack Revealing Privacy Leakage in Federated Tree-Based Systems." arXiv preprint arXiv:2506.07605 (2025).
+
+--- 20251201.pdf :: page 31/56 ---
+31
+Horizontal Federated Learning – DT Ensembles
+XGboost Bagging
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+31
+Request for the first DT
+…
+…
+…
+…
+
+--- 20251201.pdf :: page 32/56 ---
+32
+Horizontal Federated Learning – DT Ensembles
+XGboost Bagging
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+32
+
+--- 20251201.pdf :: page 33/56 ---
+33
+Horizontal Federated Learning – DT Ensembles
+XGboost Bagging
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+33
+Partial model with 5 DTs
+
+--- 20251201.pdf :: page 34/56 ---
+34
+Horizontal Federated Learning – DT Ensembles
+XGboost Bagging
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+34
+Partial model with 5 DTs
+Partial model with 5 DTs …
+…
+…
+…
+
+--- 20251201.pdf :: page 35/56 ---
+35
+Horizontal Federated Learning – DT Ensembles
+XGboost Bagging
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+35
+Request for new 
+Boosting round
+…
+…
+…
+…
+Partial model with 5 DTs
+
+--- 20251201.pdf :: page 36/56 ---
+36
+Horizontal Federated Learning – DT Ensembles
+XGboost Bagging
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: XGBoost with N DTs
+36
+Repeat til you reach 
+the final objective
+
+--- 20251201.pdf :: page 37/56 ---
+37
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: XGBoost with N DTs
+37
+[3] Di Gennaro, Marco, et al. "TimberStrike: Dataset Reconstruction Attack Revealing Privacy Leakage in Federated Tree-Based Systems." arXiv preprint arXiv:2506.07605 (2025).
+
+--- 20251201.pdf :: page 38/56 ---
+38
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+38
+Request for the first DT
+
+--- 20251201.pdf :: page 39/56 ---
+39
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+39
+
+--- 20251201.pdf :: page 40/56 ---
+40
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+40
+Partial model with 1 DT
+
+--- 20251201.pdf :: page 41/56 ---
+41
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+41
+Partial model with 1 DT
+Partial model 
+with 1 DT
+
+--- 20251201.pdf :: page 42/56 ---
+42
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+42
+Partial model with 1 DT
+Request for new 
+Boosting round
+
+--- 20251201.pdf :: page 43/56 ---
+43
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+43
+Partial model with 2 DTs
+
+--- 20251201.pdf :: page 44/56 ---
+44
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: XGBoost with N DTs
+44
+Repeat each round with
+a different client til you 
+reach the final objective
+
+--- 20251201.pdf :: page 45/56 ---
+45
+Horizontal Federated Learning – DT Ensembles
+XGboost Cyclic
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: XGBoost with N DTs
+45
+Repeat each round with
+a different client til you 
+reach the final objective
+All these methods are available or can 
+be easily implemented in Flower
+https://flower.ai/
+
+--- 20251201.pdf :: page 46/56 ---
+46
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: DT-Ensemble with N DTs
+46
+[3] Di Gennaro, Marco, et al. "TimberStrike: Dataset Reconstruction Attack Revealing Privacy Leakage in Federated Tree-Based Systems." arXiv preprint arXiv:2506.07605 (2025).
+
+--- 20251201.pdf :: page 47/56 ---
+47
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+Final Objective: DT-Ensemble with N DTs
+47
+•
+Node-by-node training
+•
+Trying to emulate a 
+centralized training
+
+--- 20251201.pdf :: page 48/56 ---
+48
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+48
+DT 0 training
+
+--- 20251201.pdf :: page 49/56 ---
+49
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+49
+DT 0 training
+Root
+node
+
+--- 20251201.pdf :: page 50/56 ---
+50
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+50
+DT 0 training
+Root
+node
+Split histograms
+…
+…
+…
+…
+
+--- 20251201.pdf :: page 51/56 ---
+51
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+51
+DT 0 training
+Root
+node
+
+--- 20251201.pdf :: page 52/56 ---
+52
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+52
+DT 0 training
+Root
+node
+Sum & choose the best split
+
+--- 20251201.pdf :: page 53/56 ---
+53
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+53
+DT 0 training
+Root
+node
+Sum & choose the best split
+Repeat for each node of each DT til 
+you reach the objective model
+
+--- 20251201.pdf :: page 54/56 ---
+54
+Horizontal Federated Learning – DT Ensembles
+Histogram-based aggregation
+Data source 1
+Data source 2
+Data source 3
+Data source 4
+Data source 5
+54
+DT 0 training
+Root
+node
+Sum & choose the best split
+Repeat for each node of each DT til 
+you reach the objective model
+Histogram-based methods can be 
+found in Nvidia Flare: 
+https://nvflare.readthedocs.io/en/
+2.4/examples/fl_algorithms.html
+
+--- 20251201.pdf :: page 55/56 ---
+Horizontal Federated Learning – DT Ensembles
+Traditional aggregation methods
+Histogram aggregation methods
+[3] Di Gennaro, Marco, et al. "TimberStrike: Dataset Reconstruction Attack Revealing Privacy Leakage in Federated Tree-Based Systems." arXiv preprint arXiv:2506.07605 (2025).
+55
+Pros
+•
+Fast and simple implementation
+•
+Low communication overhead
+Cons
+•
+Accuracy decrease
+•
+Low security w.r.t. malicious attacks
+Pros
+•
+Accuracy close to centralized training
+•
+High security w.r.t. malicious attacks
+Cons
+•
+Harder to implement
+•
+High communication overhead
+
+--- 20251201.pdf :: page 56/56 ---
+Creativity, Science and 
+Innovation
+Thank you for 
+your attention
+December 1st, 2025
+Alessandro Verosimile
+alessandro.verosimile@polimi.it
+61
